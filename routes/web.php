@@ -25,4 +25,6 @@ Route::group(['namespace' => 'App\Http\Controllers'], function () {
     Route::get('/pekerjaan', 'LandingController@pekerjaan')->name('pekerjaan');
     Route::get('/status', 'LandingController@status')->name('status');
     Route::get('/teknologi', 'LandingController@teknologi')->name('teknologi');
+
+    Route::get('/export-excel', 'ExportExcel@export_excel')->name('export-excel');
 });

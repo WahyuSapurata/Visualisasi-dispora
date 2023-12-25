@@ -30,4 +30,9 @@ class LandingController extends Controller
     {
         return view('landing.teknologi');
     }
+
+    public function kecamatan()
+    {
+        return view('landing.kecamatan');
+    }
 }

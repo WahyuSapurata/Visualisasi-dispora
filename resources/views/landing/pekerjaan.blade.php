@@ -1,292 +1,291 @@
 @extends('layouts.layout')
 @section('content')
     <div class="row">
-        <div class="col-md-6 mb-2">
-            <div class="card shadow-lg" style="height: 155px">
-                <canvas id="kt_chartjs_1" class="mh-150px"></canvas>
-            </div>
-        </div>
-        <div class="col-md-6 mb-2">
-            <div class="card shadow-lg" style="height: 155px">
-                <canvas id="kt_chartjs_4" class="mh-150px"></canvas>
+        <div class="col-md-6">
+            <div class="card justify-content-center align-items-center shadow-lg" style="height: 317px">
+                <div id="loading" class="spinner-border loading text-danger" style="width: 70px; height: 70px;"
+                    role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                <canvas id="kt_chartjs_2" class="mh-310px"></canvas>
             </div>
         </div>
         <div class="col-md-6">
-            <div class="card shadow-lg" style="height: 155px">
-                <canvas id="kt_chartjs_2" class="mh-150px"></canvas>
-            </div>
-        </div>
-        <div class="col-md-6">
-            <div class="card shadow-lg" style="height: 155px">
-                <canvas id="kt_chartjs_3" class="mh-150px"></canvas>
+            <div class="card justify-content-center align-items-center shadow-lg" style="height: 317px">
+                <div id="loading" class="spinner-border loading text-danger" style="width: 70px; height: 70px;"
+                    role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                <canvas id="kt_chartjs_4" class="mh-250px"></canvas>
             </div>
         </div>
     </div>
 @endsection
 @section('script')
     <script>
-        // Get the chart canvas element
-        var ctx = document.getElementById('kt_chartjs_1');
+        // Deklarasikan variabel myChart di luar fungsi updateChartData
+        var myChart1;
+        var myChart2;
+        var myChart3;
 
-        // Define colors
-        var primaryColor = KTUtil.getCssVariableValue('--bs-primary');
-        var dangerColor = KTUtil.getCssVariableValue('--bs-danger');
-        var successColor = KTUtil.getCssVariableValue('--bs-success');
+        $(document).ready(async function() {
+            // Tampilkan elemen loading saat permintaan AJAX dimulai
+            $('.loading').show();
 
-        // Define fonts
-        var fontFamily = KTUtil.getCssVariableValue('--bs-font-sans-serif');
+            try {
+                const res = await $.ajax({
+                    url: '/pekerjaan-get',
+                    method: 'GET'
+                });
 
-        // Chart labels
-        const labels = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October',
-            'November', 'December'
-        ];
+                if (res.success === true) {
+                    // Update chart data with the received data
+                    updateChartData(res.data);
+                    updateChartDataJenisKelamin(res.data);
+                    // updateChartDataKelahiran(res.data);
+                } else {
+                    console.error('Gagal mengambil data:', res.message);
+                }
+            } catch (error) {
+                console.error('Gagal melakukan permintaan AJAX:', error);
+            } finally {
+                // Sembunyikan elemen.loading setelah permintaan AJAX selesai
+                $('.loading').hide();
+            }
+        });
 
-        // Sample data for datasets
-        const data = {
-            labels: labels,
-            datasets: [{
-                label: 'Dataset 1',
-                backgroundColor: primaryColor,
-                borderColor: primaryColor,
-                data: [10, 20, 15, 25, 30, 22, 18, 12, 28, 16, 23, 19],
-            }, {
-                label: 'Dataset 2',
-                backgroundColor: dangerColor,
-                borderColor: dangerColor,
-                data: [15, 25, 20, 30, 35, 27, 23, 17, 33, 21, 28, 24],
-            }, {
-                label: 'Dataset 3',
-                backgroundColor: successColor,
-                borderColor: successColor,
-                data: [20, 30, 25, 35, 40, 32, 28, 22, 38, 26, 33, 29],
-            }],
-        };
+        // // Function to update chart data
+        function updateChartData(data) {
+            var ctx_2 = document.getElementById('kt_chartjs_2');
 
-        // Chart config
-        const config = {
-            type: 'bar',
-            data: data,
-            options: {
-                plugins: {
-                    title: {
-                        display: false,
-                    },
-                },
-                responsive: true,
-                interaction: {
-                    intersect: false,
-                },
-                scales: {
-                    x: {
-                        stacked: true,
-                    },
-                    y: {
-                        stacked: true,
-                    },
-                },
-            },
-            defaultFont: {
-                global: {
-                    defaultFont: fontFamily,
-                },
-            },
-        };
+            // Extract data from the response
+            const pelajar = data.pelajar;
+            const belumBekerja = data.belumBekerja;
+            const irt = data.irt;
+            const wirausaha = data.wirausaha;
+            const karyawan = data.karyawan;
+            const belumTerindentifikasi = data.belumTerindentifikasi;
 
-        // Init ChartJS -- for more info, please visit: https://www.chartjs.org/docs/latest/
-        var myChart = new Chart(ctx, config);
-    </script>
+            // Define colors
+            var primaryColor_1 = KTUtil.getCssVariableValue('--bs-info');
+            var dangerColor1 = KTUtil.getCssVariableValue('--bs-danger');
+            var successColor = KTUtil.getCssVariableValue('--bs-success');
+            var orangeColor = KTUtil.getCssVariableValue('--bs-orange');
+            var yellowColor = KTUtil.getCssVariableValue('--bs-yellow');
+            var greenColor = KTUtil.getCssVariableValue('--bs-green');
 
-    <script>
-        var ctx_1 = document.getElementById('kt_chartjs_4');
+            // Define fonts
+            var fontFamily_2 = KTUtil.getCssVariableValue('--bs-font-sans-serif');
 
-        // Define colors
-        var primaryColor_1 = KTUtil.getCssVariableValue('--bs-primary');
-        var dangerColor1 = KTUtil.getCssVariableValue('--bs-danger');
-        var dangerLightColor = KTUtil.getCssVariableValue('--bs-danger-light');
+            // Chart labels
+            const labels_2 = ['Pelajar/Mahasiswa', 'Belum/Tidak Bekerja', 'Mengurus Rumah Tangga', 'Wiraswasta',
+                'Karyawan Swasta', 'Belum Terindentifikasi'
+            ];
 
-        // Define fonts
-        var fontFamily_1 = KTUtil.getCssVariableValue('--bs-font-sans-serif');
+            // Chart data
+            const data_2 = {
+                labels: labels_2,
+                datasets: [{
+                    label: 'Tingkat Pengangguran Pemuda',
+                    backgroundColor: [primaryColor_1, dangerColor1, successColor, orangeColor, yellowColor,
+                        greenColor
+                    ],
+                    borderColor: [primaryColor_1, dangerColor1, successColor, orangeColor, yellowColor,
+                        greenColor
+                    ],
+                    data: [pelajar,
+                        belumBekerja,
+                        irt,
+                        wirausaha,
+                        karyawan,
+                        belumTerindentifikasi
+                    ],
+                }, ],
+            };
 
-        // Chart labels
-        const labels_1 = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October',
-            'November', 'December'
-        ];
-
-        // Sample data for datasets
-        const data_1 = {
-            labels: labels_1,
-            datasets: [{
-                label: 'Dataset 1',
-                backgroundColor: primaryColor_1,
-                borderColor: primaryColor_1,
-                data: [10, 20, 15, 25, 30, 22, 18, 12, 28, 16, 23, 19],
-            }, {
-                label: 'Dataset 2',
-                backgroundColor: dangerColor1,
-                borderColor: dangerColor1,
-                data: [15, 25, 20, 30, 35, 27, 23, 17, 33, 21, 28, 24],
-            }, {
-                label: 'Dataset 3',
-                backgroundColor: successColor,
-                borderColor: successColor,
-                data: [20, 30, 25, 35, 40, 32, 28, 22, 38, 26, 33, 29],
-            }],
-        };
-
-        // Chart config
-        const config_1 = {
-            type: 'line',
-            data: data_1,
-            options: {
-                plugins: {
-                    title: {
-                        display: false,
-                    },
-                    legend: {
-                        labels: {
-                            // This more specific font property overrides the global property
-                            font: {
-                                size: 15,
-                                family: fontFamily_1
-                            }
+            // Chart config
+            const config_2 = {
+                type: 'bar',
+                data: data_2,
+                options: {
+                    plugins: {
+                        title: {
+                            display: false,
                         }
-                    }
+                    },
+                    responsive: true,
                 },
-                responsive: true,
-                interaction: {
-                    intersect: false,
-                },
-                scales: {
-                    y: {
-                        stacked: true
+                defaults: {
+                    global: {
+                        defaultFont: fontFamily_2
                     }
                 }
-            },
-            defaults: {
-                global: {
-                    defaultFont: fontFamily_1
-                }
+            };
+
+            // Update or reinitialize the ChartJS instance
+            if (myChart1) {
+                // If the chart already exists, update its data
+                myChart1.data = data_2;
+                myChart1.update();
+            } else {
+                // If the chart does not exist, create a new instance
+                myChart1 = new Chart(ctx_2, config_2);
             }
-        };
+        }
 
-        // Init ChartJS -- for more info, please visit: https://www.chartjs.org/docs/latest/
-        var myChart = new Chart(ctx_1, config_1);
-    </script>
+        // // Function to update chart data
+        function updateChartDataJenisKelamin(data) {
+            var ctx_2 = document.getElementById('kt_chartjs_4');
 
-    <script>
-        var ctx_2 = document.getElementById('kt_chartjs_2');
+            // Define colors
+            var primaryColor_1 = KTUtil.getCssVariableValue('--bs-info');
+            var dangerColor1 = KTUtil.getCssVariableValue('--bs-danger');
+            var successColor = KTUtil.getCssVariableValue('--bs-success');
+            var orangeColor = KTUtil.getCssVariableValue('--bs-orange');
+            var yellowColor = KTUtil.getCssVariableValue('--bs-yellow');
+            var greenColor = KTUtil.getCssVariableValue('--bs-green');
+            var cyanColor = KTUtil.getCssVariableValue('--bs-cyan');
+            var grayColor = KTUtil.getCssVariableValue('--bs-gray');
+            var grayDarkColor = KTUtil.getCssVariableValue('--gray-dark');
 
-        // Define colors
-        var primaryColor_2 = KTUtil.getCssVariableValue('--bs-primary');
-        var dangerColor_2 = KTUtil.getCssVariableValue('--bs-danger');
+            // Define fonts
+            var fontFamily_2 = KTUtil.getCssVariableValue('--bs-font-sans-serif');
 
-        // Define fonts
-        var fontFamily_2 = KTUtil.getCssVariableValue('--bs-font-sans-serif');
+            // Chart labels
+            const labels_2 = ['Pelajar/Mahasiswa', 'Belum/Tidak Bekerja', 'Mengurus Rumah Tangga', 'Wiraswasta',
+                'Karyawan Swasta', 'Belum Terindentifikasi'
+            ];
 
-        // Chart labels
-        const labels_2 = ['January', 'February', 'March', 'April', 'May', 'June', 'July'];
+            // Chart data
+            const data_2 = {
+                labels: labels_2,
+                datasets: [{
+                    label: 'Tingkat Pengangguran Pemuda',
+                    backgroundColor: [primaryColor_1, dangerColor1, successColor, orangeColor, yellowColor,
+                        greenColor, cyanColor, grayColor, grayDarkColor
+                    ],
+                    borderColor: [primaryColor_1, dangerColor1, successColor, orangeColor, yellowColor,
+                        greenColor, cyanColor, grayColor, grayDarkColor
+                    ],
+                    data: [600,
+                        800,
+                        300,
+                        900,
+                        100,
+                        450,
+                        640,
+                        810,
+                        810
+                    ],
+                }, ],
+            };
 
-        // Chart data
-        const data_2 = {
-            labels: labels_2,
-            datasets: [{
-                label: 'Dataset 1',
-                backgroundColor: primaryColor_1,
-                borderColor: primaryColor_1,
-                data: [10, 20, 15, 25, 30, 22, 18, 12, 28, 16, 23, 19],
-            }, {
-                label: 'Dataset 2',
-                backgroundColor: dangerColor1,
-                borderColor: dangerColor1,
-                data: [15, 25, 20, 30, 35, 27, 23, 17, 33, 21, 28, 24],
-            }, {
-                label: 'Dataset 3',
-                backgroundColor: successColor,
-                borderColor: successColor,
-                data: [20, 30, 25, 35, 40, 32, 28, 22, 38, 26, 33, 29],
-            }],
-        };
-
-        // Chart config
-        const config_2 = {
-            type: 'bar',
-            data: data_2,
-            options: {
-                plugins: {
-                    title: {
-                        display: false,
-                    }
+            // Chart config
+            const config_2 = {
+                type: 'pie',
+                data: data_2,
+                options: {
+                    plugins: {
+                        title: {
+                            display: false,
+                        }
+                    },
+                    responsive: true,
                 },
-                responsive: true,
-            },
-            defaults: {
-                global: {
-                    defaultFont: fontFamily_2
-                }
-            }
-        };
-
-        // Init ChartJS -- for more info, please visit: https://www.chartjs.org/docs/latest/
-        var myChart = new Chart(ctx_2, config_2);
-    </script>
-
-    <script>
-        var ctx_3 = document.getElementById('kt_chartjs_3');
-
-        // Define colors
-        var primaryColor_3 = KTUtil.getCssVariableValue('--bs-primary');
-        var dangerColor_3 = KTUtil.getCssVariableValue('--bs-danger');
-        var successColor_3 = KTUtil.getCssVariableValue('--bs-success');
-        var warningColor_3 = KTUtil.getCssVariableValue('--bs-warning');
-        var infoColor_3 = KTUtil.getCssVariableValue('--bs-info');
-
-        // Define fonts
-        var fontFamily_3 = KTUtil.getCssVariableValue('--bs-font-sans-serif');
-
-        // Chart labels
-        const labels_3 = ['January', 'February', 'March', 'April', 'May'];
-
-        // Chart data
-        const data_3 = {
-            labels: labels_3,
-            datasets: [{
-                label: 'Dataset 1',
-                backgroundColor: primaryColor_3,
-                borderColor: primaryColor_3,
-                data: [10, 20, 15, 25, 30, 22, 18, 12, 28, 16, 23, 19],
-            }, {
-                label: 'Dataset 2',
-                backgroundColor: dangerColor_3,
-                borderColor: dangerColor_3,
-                data: [15, 25, 20, 30, 35, 27, 23, 17, 33, 21, 28, 24],
-            }, {
-                label: 'Dataset 3',
-                backgroundColor: successColor_3,
-                borderColor: successColor_3,
-                data: [20, 30, 25, 35, 40, 32, 28, 22, 38, 26, 33, 29],
-            }],
-        };
-
-        // Chart config
-        const config_3 = {
-            type: 'pie',
-            data: data_3,
-            options: {
-                plugins: {
-                    title: {
-                        display: false,
+                defaults: {
+                    global: {
+                        defaultFont: fontFamily_2
                     }
-                },
-                responsive: true,
-            },
-            defaults: {
-                global: {
-                    defaultFont: fontFamily
                 }
-            }
-        };
+            };
 
-        // Init ChartJS -- for more info, please visit: https://www.chartjs.org/docs/latest/
-        var myChart = new Chart(ctx_3, config_3);
+            // Update or reinitialize the ChartJS instance
+            if (myChart2) {
+                // If the chart already exists, update its data
+                myChart2.data = data_2;
+                myChart2.update();
+            } else {
+                // If the chart does not exist, create a new instance
+                myChart2 = new Chart(ctx_2, config_2);
+            }
+        }
+
+        // // Function to update chart data
+        // function updateChartDataKelahiran(data) {
+        //     var ctx_2 = document.getElementById('kt_chartjs_3');
+
+        //     // Extract data from the response
+        //     const kelahiran0sampai10 = data.kelahiran0sampai10;
+        //     const kelahiran11sampai23 = data.kelahiran11sampai23;
+        //     const kelahiran24sampai39 = data.kelahiran24sampai39;
+
+        //     // Define colors
+        //     var primaryColor_1 = KTUtil.getCssVariableValue('--bs-info');
+        //     var dangerColor1 = KTUtil.getCssVariableValue('--bs-danger');
+        //     var successColor_3 = KTUtil.getCssVariableValue('--bs-success');
+
+        //     // Define fonts
+        //     var fontFamily_2 = KTUtil.getCssVariableValue('--bs-font-sans-serif');
+
+        //     // Chart labels
+        //     const labels_2 = ['0-10', '11-23', '24-39'];
+
+        //     // Chart data
+        //     const data_2 = {
+        //         labels: labels_2,
+        //         datasets: [{
+        //             label: 'Angka Kelahiran Berdasarkan Umur',
+        //             backgroundColor: [primaryColor_1, dangerColor1, successColor_3],
+        //             borderColor: [primaryColor_1, dangerColor1, successColor_3],
+        //             data: [kelahiran0sampai10, kelahiran11sampai23, kelahiran24sampai39],
+        //         }, ],
+        //     };
+
+        //     // Chart config
+        //     const config_2 = {
+        //         type: 'line',
+        //         data: data_2,
+        //         options: {
+        //             plugins: {
+        //                 title: {
+        //                     display: false,
+        //                 },
+        //                 legend: {
+        //                     labels: {
+        //                         // This more specific font property overrides the global property
+        //                         font: {
+        //                             size: 15,
+        //                             family: fontFamily_2
+        //                         }
+        //                     }
+        //                 }
+        //             },
+        //             responsive: true,
+        //             interaction: {
+        //                 intersect: false,
+        //             },
+        //             scales: {
+        //                 y: {
+        //                     stacked: true
+        //                 }
+        //             }
+        //         },
+        //         defaults: {
+        //             global: {
+        //                 defaultFont: fontFamily_2
+        //             }
+        //         }
+        //     };
+
+        //     // Update or reinitialize the ChartJS instance
+        //     if (myChart3) {
+        //         // If the chart already exists, update its data
+        //         myChart3.data = data_2;
+        //         myChart3.update();
+        //     } else {
+        //         // If the chart does not exist, create a new instance
+        //         myChart3 = new Chart(ctx_2, config_2);
+        //     }
+        // }
     </script>
 @endsection

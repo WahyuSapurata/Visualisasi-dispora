@@ -64,7 +64,7 @@ class ExportExcel extends BaseController
         $sheet->setCellValue('U3', 'IS MOVE');
         $sheet->setCellValue('V3', 'KETERANGAN');
 
-        $data = DB::table('citizens')->get();
+        $data = DB::table('citizens')->take(500)->get();
 
         $row = 4;
 

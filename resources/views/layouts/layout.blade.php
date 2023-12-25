@@ -48,7 +48,7 @@
                 <div class="card shadow-sm card-content">
                     <div class="row h-sm-100">
                         <div class="col-md-2">
-                            <div class="bg-primary rounded h-sm-100 py-10">
+                            <div class="bg-primary rounded h-sm-100 py-5">
                                 <img class="w-sm-100 mb-5" src="{{ asset('logo.png') }}" alt="">
                                 <div class="aside-menu bg-primary flex-column-fluid">
                                     <!--begin::Aside Menu-->
@@ -145,6 +145,22 @@
                                                 </a>
                                             </div>
 
+                                            <div class="menu-item">
+                                                <a class="menu-link {{ $path[0] === 'kecamatan' ? 'active' : '' }}"
+                                                    href="{{ route('kecamatan') }}">
+                                                    <span class="menu-icon">
+                                                        <!--begin::Svg Icon | path: icons/duotune/general/gen025.svg-->
+                                                        <span class="svg-icon svg-icon-2">
+                                                            <img src="{{ url('admin/assets/media/icons/aside/datagurudef.svg') }}"
+                                                                alt="">
+                                                        </span>
+                                                        <!--end::Svg Icon-->
+                                                    </span>
+                                                    <span class="menu-title"
+                                                        style="{{ $path[0] === 'kecamatan' ? 'color: #F4BE2A' : 'color: #FFFFFF' }}">Kecamatan</span>
+                                                </a>
+                                            </div>
+
                                             {{-- <div class="menu-item">
                                                 <a class="menu-link {{ $isActive ? 'active' : '' }}" href="{{ route($dashboardRoutes[$role]) }}">
                                                     <span class="menu-icon">
@@ -172,38 +188,40 @@
                                 <div class="fs-5 p-2">Filter Tahun</div>
                                 <div class="d-flex gap-3">
                                     <a href="" class="btn btn-primary p-3 py-2">
-                                        2001-2023</a>
+                                        2020</a>
                                     <a href="" class="btn btn-primary p-3 py-2">
-                                        2001-2023</a>
+                                        2021</a>
                                     <a href="" class="btn btn-primary p-3 py-2">
-                                        2001-2023</a>
+                                        2022</a>
                                     <a href="" class="btn btn-primary p-3 py-2">
-                                        2001-2023</a>
+                                        2023</a>
                                 </div>
                                 <div class="py-3">
                                     <div class="d-flex justify-content-center gap-5">
-                                        <div class="card d-grid text-center shadow-lg p-3 px-5">
+                                        <div class="card d-grid text-center shadow-lg p-3 px-5" style="width: 280px;">
                                             <div class="fw-bolder bg-primary-kotak rounded p-2">Jumlah Penduduk
                                                 Kepemudaan
                                             </div>
-                                            <div class="fs-1">100</div>
+                                            <div class="fs-1" id="jumlah_penduduk">
+                                                <div class="spinner-border text-danger" role="status">
+                                                    <span class="visually-hidden">Loading...</span>
+                                                </div>
+                                            </div>
                                             <div class="fs-5">Jiwa</div>
                                         </div>
-                                        <div class="card d-grid text-center shadow-lg p-3 px-5">
-                                            <div class="fw-bolder bg-primary-kotak rounded p-2">Jumlah Penduduk
-                                                Kepemudaan
+                                        <div class="card d-grid text-center shadow-lg p-3 px-5" style="width: 280px;">
+                                            <div class="fw-bolder bg-primary-kotak rounded p-2">Total Kecamatan
+                                            </div>
+                                            <div class="fs-1">14</div>
+                                            <div class="fs-5">Kecamatan</div>
+                                        </div>
+                                        <div class="card d-grid text-center shadow-lg p-3 px-5" style="width: 280px;">
+                                            <div class="fw-bolder bg-primary-kotak rounded p-2">Kepadatan Penduduk
                                             </div>
                                             <div class="fs-1">100</div>
-                                            <div class="fs-5">Jiwa</div>
+                                            <div class="fs-5">Jiwa/Km Persegi</div>
                                         </div>
-                                        <div class="card d-grid text-center shadow-lg p-3 px-5">
-                                            <div class="fw-bolder bg-primary-kotak rounded p-2">Jumlah Penduduk
-                                                Kepemudaan
-                                            </div>
-                                            <div class="fs-1">100</div>
-                                            <div class="fs-5">Jiwa</div>
-                                        </div>
-                                        <div class="card d-grid text-center shadow-lg p-3 px-5">
+                                        <div class="card d-grid text-center shadow-lg p-3 px-5"style="width: 280px;">
                                             <div class="fw-bolder bg-primary-kotak rounded p-2">Jumlah Penduduk
                                                 Kepemudaan
                                             </div>
@@ -274,6 +292,31 @@
         @yield('script')
         <!--end::Page Custom Javascript-->
         <!--end::Javascript-->
+
+        <script>
+            $(document).ready(async function() {
+                try {
+                    const res = await $.ajax({
+                        url: '/data-master',
+                        method: 'GET'
+                    });
+
+                    if (res.success === true) {
+                        const jumlahPenduduk = res.data;
+
+                        // Mengubah angka menjadi format ribuan dengan titik
+                        const jumlahPendudukFormatted = jumlahPenduduk.toLocaleString();
+
+                        // Menetapkan nilai ke elemen HTML dengan ID 'jumlah_penduduk'
+                        $('#jumlah_penduduk').text(jumlahPendudukFormatted);
+                    } else {
+                        console.error('Gagal mengambil data:', res.message);
+                    }
+                } catch (error) {
+                    console.error('Gagal melakukan permintaan AJAX:', error.statusText);
+                }
+            });
+        </script>
 </body>
 <!--end::Body-->
 
